@@ -16,17 +16,19 @@ import { Product } from '../../../core/models/product.model';
   template: `
     <app-navbar />
 
-    <div class="mb-4">
-  <div class="d-flex justify-content-between align-items-center">
-    <h2 class="fw-bold mb-0">
-      <i class="bi bi-box me-2 text-primary"></i>Gestión de Productos
-    </h2>
-    <button class="btn btn-primary" (click)="openModal()">
-      <i class="bi bi-plus-circle me-1"></i>
-      <span class="d-none d-sm-inline">Nuevo </span>Producto
-    </button>
-  </div>
-</div>
+    <div class="container py-4">
+
+      <!-- Header -->
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 class="fw-bold mb-0">
+            <i class="bi bi-box me-2 text-primary"></i>Gestión de Productos
+          </h2>
+          <button class="btn btn-primary" (click)="openModal()">
+            <i class="bi bi-plus-circle me-1"></i>
+            <span class="d-none d-sm-inline">Nuevo </span>Producto
+          </button>
+        </div>
       </div>
 
       <!-- Loading -->
@@ -125,6 +127,7 @@ import { Product } from '../../../core/models/product.model';
           </div>
         </div>
       }
+
     </div>
 
     <!-- Modal Crear/Editar -->
@@ -163,7 +166,7 @@ import { Product } from '../../../core/models/product.model';
                       type="text"
                       class="form-control"
                       formControlName="category"
-                      placeholder="Ej: Electrónica"
+                      placeholder="Ej: Tortas"
                     >
                   </div>
 
@@ -219,7 +222,6 @@ import { Product } from '../../../core/models/product.model';
                     </select>
                   </div>
 
-                  <!-- Imagen -->
                   <div class="col-12">
                     <label class="form-label fw-semibold">Imagen del producto</label>
                     <input
