@@ -25,7 +25,7 @@ import { environment } from '../../../../environments/environment';
 
         <div class="collapse navbar-collapse" id="navMenu">
 
-          @if (auth.isUser()) {
+          @if (auth.isLoggedIn() && !auth.isAdmin()) {
             <ul class="navbar-nav me-auto gap-1">
               <li class="nav-item">
                 <a class="nav-link" routerLink="/catalog" routerLinkActive="active">
@@ -56,7 +56,7 @@ import { environment } from '../../../../environments/environment';
           }
 
           <ul class="navbar-nav ms-auto align-items-center gap-2">
-            @if (auth.isUser()) {
+            @if (auth.isLoggedIn() && !auth.isAdmin()) {
               <li class="nav-item">
                 <a class="nav-link cart-badge" routerLink="/cart">
                   <i class="bi bi-bag-heart fs-5" style="color:#ec4899"></i>
@@ -74,7 +74,7 @@ import { environment } from '../../../../environments/environment';
                   <div class="avatar-circle">
                     {{ auth.profile()?.full_name?.charAt(0)?.toUpperCase() }}
                   </div>
-                  <span class="d-none d-lg-inline fw-600">
+                  <span class="d-none d-lg-inline">
                     {{ auth.profile()?.full_name }}
                   </span>
                 </a>
