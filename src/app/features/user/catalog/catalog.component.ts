@@ -1,7 +1,6 @@
 // src/app/features/user/catalog/catalog.component.ts
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
@@ -12,13 +11,12 @@ import { Product } from '../../../core/models/product.model';
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, NavbarComponent],
+  imports: [CommonModule, RouterLink, NavbarComponent],
   template: `
     <app-navbar />
 
-    <!-- Hero -->
-    <div class="catalog-hero text-center py-5">
-      <h1 class="display-5 fw-800 mb-2">🎂 Nuestros Postres</h1>
+    <div class="catalog-hero text-center py-4">
+      <h1 class="display-5 fw-bold mb-2">🎂 Nuestros Postres</h1>
       <p class="text-muted fs-5">Hechos con amor, listos para endulzar tu día 🍭</p>
     </div>
 
@@ -26,77 +24,60 @@ import { Product } from '../../../core/models/product.model';
 
       <!-- Filtros -->
       <div class="filter-bar rounded-3 p-3 mb-4">
-  <div class="row g-2 align-items-center">
-    <div class="col-12">
-      <div class="input-group">
-        <span class="input-group-text">🔍</span>
-        <input type="text" class="form-control" placeholder="Buscar postre..."
-          [(ngModel)]="searchTerm">
-      </div>
-    </div>
-    <div class="col-6">
-      <select class="form-select" [(ngModel)]="selectedCategory">
-        <option value="">Todas las categorías</option>
-        @for (cat of categories(); track cat) {
-          <option [value]="cat">{{ cat }}</option>
-        }
-      </select>
-    </div>
-    <div class="col-6">
-      <select class="form-select" [(ngModel)]="sortBy">
-        <option value="name">A - Z</option>
-        <option value="price_asc">Menor precio</option>
-        <option value="price_desc">Mayor precio</option>
-      </select>
-    </div>
-    <div class="col-12">
-      <a routerLink="/cart" class="btn btn-pastel-primary w-100 position-relative">
-        <i class="bi bi-bag-heart me-2"></i>Ver carrito
-        @if (cart.totalItems() > 0) {
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            {{ cart.totalItems() }}
-          </span>
-        }
-      </a>
-    </div>
-  </div>
-</div>
-          <div class="input-group">
-            <span class="input-group-text">🔍</span>
-            <input type="text" class="form-control" placeholder="Buscar postre..."
-              [(ngModel)]="searchTerm">
+        <div class="row g-2">
+          <div class="col-12">
+            <div class="input-group">
+              <span class="input-group-text">🔍</span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar postre..."
+                [value]="searchTerm()"
+                (input)="searchTerm.set($any($event.target).value)"
+              >
+            </div>
+          </div>
+          <div class="col-6">
+            <select
+              class="form-select"
+              [value]="selectedCategory()"
+              (change)="selectedCategory.set($any($event.target).value)"
+            >
+              <option value="">Todas las categorías</option>
+              @for (cat of categories(); track cat) {
+                <option [value]="cat">{{ cat }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-6">
+            <select
+              class="form-select"
+              [value]="sortBy()"
+              (change)="sortBy.set($any($event.target).value)"
+            >
+              <option value="name">A - Z</option>
+              <option value="price_asc">Menor precio</option>
+              <option value="price_desc">Mayor precio</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <a routerLink="/cart" class="btn btn-pastel-primary w-100 position-relative">
+              <i class="bi bi-bag-heart me-2"></i>Ver carrito
+              @if (cart.totalItems() > 0) {
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{ cart.totalItems() }}
+                </span>
+              }
+            </a>
           </div>
         </div>
-        <div style="min-width:160px">
-          <select class="form-select" [(ngModel)]="selectedCategory">
-            <option value="">Todas las categorías</option>
-            @for (cat of categories(); track cat) {
-              <option [value]="cat">{{ cat }}</option>
-            }
-          </select>
-        </div>
-        <div style="min-width:160px">
-          <select class="form-select" [(ngModel)]="sortBy">
-            <option value="name">A - Z</option>
-            <option value="price_asc">Precio: menor a mayor</option>
-            <option value="price_desc">Precio: mayor a menor</option>
-          </select>
-        </div>
-        <a routerLink="/cart" class="btn btn-pastel-primary position-relative px-4">
-          <i class="bi bi-bag-heart me-2"></i>Carrito
-          @if (cart.totalItems() > 0) {
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              {{ cart.totalItems() }}
-            </span>
-          }
-        </a>
       </div>
 
       <!-- Loading -->
       @if (loading()) {
         <div class="text-center py-5">
           <div class="spinner-pastel mb-3"></div>
-          <p class="text-muted fw-600">Preparando los postres... 🍰</p>
+          <p class="text-muted">Preparando los postres... 🍰</p>
         </div>
       }
 
@@ -115,7 +96,6 @@ import { Product } from '../../../core/models/product.model';
           @for (product of filtered(); track product.id) {
             <div class="col">
               <div class="card product-card h-100 border-0 shadow-sm">
-
                 @if (product.image_url) {
                   <img [src]="product.image_url" [alt]="product.name" class="product-img">
                 } @else {
@@ -123,12 +103,9 @@ import { Product } from '../../../core/models/product.model';
                     {{ getCategoryEmoji(product.category) }}
                   </div>
                 }
-
                 <div class="card-body d-flex flex-column">
                   @if (product.category) {
-                    <span class="category-badge mb-2 align-self-start">
-                      {{ product.category }}
-                    </span>
+                    <span class="category-badge mb-2 align-self-start">{{ product.category }}</span>
                   }
                   <h6 class="card-title fw-bold mb-1">{{ product.name }}</h6>
                   @if (product.description) {
@@ -143,18 +120,14 @@ import { Product } from '../../../core/models/product.model';
                     </small>
                   </div>
                 </div>
-
                 <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
                   <button
                     class="btn btn-pastel-primary w-100"
                     [disabled]="product.stock === 0"
                     (click)="addToCart(product)"
                   >
-                    @if (product.stock === 0) {
-                      Sin stock
-                    } @else {
-                      <i class="bi bi-bag-plus me-2"></i>Agregar 🛍️
-                    }
+                    @if (product.stock === 0) { Sin stock }
+                    @else { <i class="bi bi-bag-plus me-2"></i>Agregar 🛍️ }
                   </button>
                 </div>
               </div>
@@ -169,10 +142,7 @@ import { Product } from '../../../core/models/product.model';
       background: linear-gradient(135deg, #fce7f3 0%, #f5f3ff 50%, #fff7ed 100%);
       border-bottom: 2px solid #fce7f3;
     }
-    .filter-bar {
-      background: #fff;
-      border: 2px solid #fce7f3;
-    }
+    .filter-bar { background: #fff; border: 2px solid #fce7f3; }
     .spinner-pastel {
       width: 48px; height: 48px;
       border: 4px solid #fce7f3;
@@ -197,32 +167,22 @@ export class CatalogComponent implements OnInit {
   sortBy           = signal('name');
 
   filtered = computed(() => {
-  let list = this.products();
-  if (this.searchTerm()) {
-    const t = this.searchTerm().toLowerCase();
-    list = list.filter(p =>
-      p.name.toLowerCase().includes(t) || p.description?.toLowerCase().includes(t)
-    );
-  }
-  if (this.selectedCategory()) {
-    list = list.filter(p => p.category === this.selectedCategory());
-  }
-  return [...list].sort((a, b) => {
-    if (this.sortBy() === 'price_asc')  return a.price - b.price;
-    if (this.sortBy() === 'price_desc') return b.price - a.price;
-    return a.name.localeCompare(b.name);
-  });
-});
+    let list = this.products();
+    const term = this.searchTerm().toLowerCase().trim();
+    if (term) {
       list = list.filter(p =>
-        p.name.toLowerCase().includes(t) || p.description?.toLowerCase().includes(t)
+        p.name.toLowerCase().includes(term) ||
+        p.description?.toLowerCase().includes(term)
       );
     }
-    if (this.selectedCategory) {
-      list = list.filter(p => p.category === this.selectedCategory);
+    const cat = this.selectedCategory();
+    if (cat) {
+      list = list.filter(p => p.category === cat);
     }
+    const sort = this.sortBy();
     return [...list].sort((a, b) => {
-      if (this.sortBy === 'price_asc')  return a.price - b.price;
-      if (this.sortBy === 'price_desc') return b.price - a.price;
+      if (sort === 'price_asc')  return a.price - b.price;
+      if (sort === 'price_desc') return b.price - a.price;
       return a.name.localeCompare(b.name);
     });
   });
