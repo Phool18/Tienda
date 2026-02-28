@@ -1,11 +1,11 @@
 // src/app/app.routes.ts
 import { Routes } from '@angular/router';
-import { authGuard, adminGuard, userGuard, noAuthGuard } from './core/guards/auth.guard';
+import { authGuard, adminGuard, blockAdminGuard, noAuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/catalog', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
 
-  // ── Rutas públicas (si ya está logueado lo redirige) ───
+  // ── Rutas públicas ─────────────────────────────────────
   {
     path: 'login',
     canActivate: [noAuthGuard],
@@ -19,22 +19,22 @@ export const routes: Routes = [
       import('./features/auth/register/register.component').then(c => c.RegisterComponent)
   },
 
-  // ── Rutas de usuario ───────────────────────────────────
+  // ── Rutas de usuario (admin bloqueado) ─────────────────
   {
     path: 'catalog',
-    canActivate: [authGuard, userGuard],
+    canActivate: [authGuard, blockAdminGuard],
     loadComponent: () =>
       import('./features/user/catalog/catalog.component').then(c => c.CatalogComponent)
   },
   {
     path: 'cart',
-    canActivate: [authGuard, userGuard],
+    canActivate: [authGuard, blockAdminGuard],
     loadComponent: () =>
       import('./features/user/cart/cart.component').then(c => c.CartComponent)
   },
   {
     path: 'my-orders',
-    canActivate: [authGuard, userGuard],
+    canActivate: [authGuard, blockAdminGuard],
     loadComponent: () =>
       import('./features/user/orders/orders.component').then(c => c.OrdersComponent)
   },
@@ -58,5 +58,5 @@ export const routes: Routes = [
     ]
   },
 
-  { path: '**', redirectTo: '/catalog' }
+  { path: '**', redirectTo: '/login' }
 ];
