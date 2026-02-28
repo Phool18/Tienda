@@ -216,3 +216,4 @@ export class CatalogComponent implements OnInit {
     return map[category ?? ''] ?? '🍬';
   }
 }
+console.log("hola");
