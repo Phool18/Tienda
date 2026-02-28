@@ -9,7 +9,7 @@ async function waitForProfile(auth: AuthService): Promise<void> {
   // Esperar máximo 3 segundos
   for (let i = 0; i < 30; i++) {
     await new Promise(r => setTimeout(r, 100));
-    if (auth.profile() !== null || !auth.loading()) return;
+    if (auth.profile() !== null) return;
   }
 }
 
