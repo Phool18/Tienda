@@ -16,14 +16,17 @@ import { Product } from '../../../core/models/product.model';
   template: `
     <app-navbar />
 
-    <div class="container-fluid py-4">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold mb-0">
-          <i class="bi bi-box me-2 text-primary"></i>Gestión de Productos
-        </h2>
-        <button class="btn btn-primary" (click)="openModal()">
-          <i class="bi bi-plus-circle me-2"></i>Nuevo Producto
-        </button>
+    <div class="mb-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <h2 class="fw-bold mb-0">
+      <i class="bi bi-box me-2 text-primary"></i>Gestión de Productos
+    </h2>
+    <button class="btn btn-primary" (click)="openModal()">
+      <i class="bi bi-plus-circle me-1"></i>
+      <span class="d-none d-sm-inline">Nuevo </span>Producto
+    </button>
+  </div>
+</div>
       </div>
 
       <!-- Loading -->
