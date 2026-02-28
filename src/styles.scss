@@ -1,0 +1,404 @@
+// ============================================================
+// Tienda de Postres — Estilos Pastel
+// ============================================================
+
+// Paleta pastel
+$pink:        #f9a8d4;
+$pink-dark:   #ec4899;
+$pink-light:  #fce7f3;
+$purple:      #c4b5fd;
+$purple-dark: #7c3aed;
+$purple-light:#f5f3ff;
+$peach:       #fdba74;
+$peach-light: #fff7ed;
+$mint:        #6ee7b7;
+$mint-light:  #ecfdf5;
+$cream:       #fef9f0;
+$brown:       #92400e;
+$text-dark:   #3d1a1a;
+$text-muted:  #9d7777;
+
+// Override Bootstrap
+$primary:   $pink-dark;
+$secondary: $purple-dark;
+$success:   #10b981;
+$danger:    #f43f5e;
+$warning:   $peach;
+$light:     $cream;
+$dark:      $text-dark;
+$body-bg:   $cream;
+$body-color: $text-dark;
+
+@import 'bootstrap/scss/bootstrap';
+
+// ── Fuente global ──────────────────────────────────────────
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
+body {
+  font-family: 'Nunito', system-ui, sans-serif;
+  background: $cream;
+  color: $text-dark;
+}
+
+// ── Botones pastel personalizados ──────────────────────────
+.btn-pastel-primary {
+  background: linear-gradient(135deg, #f9a8d4, #ec4899);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, #ec4899, #db2777);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    transform: none;
+  }
+}
+
+.btn-pastel-secondary {
+  background: linear-gradient(135deg, #c4b5fd, #7c3aed);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-weight: 700;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+
+  &:hover {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-pastel-outline {
+  background: transparent;
+  color: $pink-dark;
+  border: 2px solid $pink;
+  border-radius: 50px;
+  font-weight: 700;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $pink-light;
+    color: $pink-dark;
+    border-color: $pink-dark;
+  }
+}
+
+// ── Navbar ─────────────────────────────────────────────────
+.navbar-pastel {
+  background: linear-gradient(135deg, #fff0f6 0%, #f5f3ff 100%) !important;
+  border-bottom: 2px solid $pink-light;
+  box-shadow: 0 2px 12px rgba(249, 168, 212, 0.2);
+
+  .navbar-brand {
+    font-weight: 800;
+    font-size: 1.4rem;
+    background: linear-gradient(135deg, $pink-dark, $purple-dark);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-link {
+    color: $text-dark !important;
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 6px 14px !important;
+    transition: all 0.2s;
+
+    &:hover, &.active {
+      background: $pink-light;
+      color: $pink-dark !important;
+    }
+  }
+
+  .navbar-toggler {
+    border-color: $pink;
+  }
+}
+
+// ── Auth wrapper ───────────────────────────────────────────
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fce7f3 0%, #f5f3ff 50%, #fff7ed 100%);
+  padding: 1rem;
+
+  &::before {
+    content: '🍰 🍩 🧁 🍭 🎂 🍫';
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    letter-spacing: 1rem;
+    opacity: 0.3;
+    white-space: nowrap;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 440px;
+    border-radius: 24px;
+    border: 2px solid $pink-light;
+    box-shadow: 0 20px 60px rgba(236, 72, 153, 0.12),
+                0 8px 24px rgba(0,0,0,0.06);
+    background: #fff;
+  }
+}
+
+.brand-icon {
+  font-size: 3rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+.link-pastel {
+  color: $pink-dark;
+  &:hover { color: $purple-dark; }
+}
+
+// ── Formularios ────────────────────────────────────────────
+.form-control, .form-select {
+  border-radius: 12px;
+  border: 2px solid #f3d5e7;
+  padding: 0.55rem 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  background: #fff;
+
+  &:focus {
+    border-color: $pink-dark;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.12);
+  }
+}
+
+.input-group-text {
+  border-radius: 12px 0 0 12px;
+  border: 2px solid #f3d5e7;
+  border-right: none;
+  background: $pink-light;
+  color: $pink-dark;
+  font-size: 1.1rem;
+}
+
+.input-group .form-control {
+  border-radius: 0 12px 12px 0;
+  border-left: none;
+}
+
+.input-group .btn {
+  border-radius: 0 12px 12px 0;
+  border: 2px solid #f3d5e7;
+  border-left: none;
+  background: $pink-light;
+  color: $text-muted;
+}
+
+// ── Cards de producto ──────────────────────────────────────
+.product-card {
+  border: 2px solid $pink-light !important;
+  border-radius: 20px !important;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  background: #fff;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(236, 72, 153, 0.15) !important;
+    border-color: $pink !important;
+  }
+
+  .product-img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .product-img-placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, $pink-light, $purple-light);
+    font-size: 3.5rem;
+  }
+
+  .card-body {
+    padding: 1rem 1.2rem;
+  }
+
+  .category-badge {
+    background: $pink-light;
+    color: $pink-dark;
+    border-radius: 50px;
+    padding: 2px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .price-tag {
+    background: linear-gradient(135deg, $pink-dark, $purple-dark);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+}
+
+// ── Carrito badge ──────────────────────────────────────────
+.cart-badge {
+  position: relative;
+  .badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    font-size: 0.65rem;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: $pink-dark !important;
+  }
+}
+
+// ── Estado de pedido ───────────────────────────────────────
+.status-badge {
+  padding: 4px 14px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  &.pendiente  { background: #fff7ed; color: #c2410c; }
+  &.confirmado { background: $purple-light; color: $purple-dark; }
+  &.entregado  { background: $mint-light; color: #065f46; }
+  &.cancelado  { background: #fff1f2; color: #be123c; }
+}
+
+// ── Admin sidebar ──────────────────────────────────────────
+.admin-sidebar {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #3d1a1a 0%, #1a0a0a 100%);
+
+  .nav-link {
+    color: #f9a8d4;
+    padding: 10px 20px;
+    border-radius: 12px;
+    margin: 3px 8px;
+    font-weight: 600;
+    transition: all 0.2s;
+
+    &:hover, &.active {
+      background: rgba(249, 168, 212, 0.15);
+      color: #fff;
+    }
+
+    i { margin-right: 8px; }
+  }
+}
+
+// ── Admin tabla ────────────────────────────────────────────
+.admin-table {
+  th {
+    background: $pink-light;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $pink-dark;
+    border-bottom: 2px solid $pink;
+  }
+  td { vertical-align: middle; }
+}
+
+// ── Toast ──────────────────────────────────────────────────
+.toast-container-custom {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 10000;
+}
+
+// ── Empty state ────────────────────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  .empty-emoji {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+    animation: bounce 2s infinite;
+  }
+
+  h4 { color: $text-dark; font-weight: 700; }
+  p  { color: $text-muted; }
+}
+
+// ── Page header ────────────────────────────────────────────
+.page-header {
+  background: linear-gradient(135deg, $pink-light 0%, $purple-light 100%);
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid $pink-light;
+
+  h2 {
+    font-weight: 800;
+    background: linear-gradient(135deg, $pink-dark, $purple-dark);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+  }
+}
+
+// ── Avatar ─────────────────────────────────────────────────
+.avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $pink, $purple);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+// ── Scrollbar personalizada ────────────────────────────────
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: $cream; }
+::-webkit-scrollbar-thumb {
+  background: $pink;
+  border-radius: 4px;
+  &:hover { background: $pink-dark; }
+}
+
+// ── Responsive ────────────────────────────────────────────
+@media (max-width: 768px) {
+  .auth-wrapper::before { display: none; }
+  .product-card .product-img,
+  .product-card .product-img-placeholder { height: 160px; }
+}
