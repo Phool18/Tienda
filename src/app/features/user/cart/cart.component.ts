@@ -40,65 +40,65 @@ import { NavbarComponent } from '../../../shared/components/navbar/navbar.compon
             <div class="card border-0 shadow-sm">
               <div class="card-body p-0">
                 @for (item of cart.items(); track item.product.id) {
-                  <div class="d-flex align-items-center p-3 border-bottom">
+                  <div class="p-3 border-bottom">
+                    <div class="d-flex align-items-center gap-2 mb-2">
 
-                    <!-- Imagen -->
-                    @if (item.product.image_url) {
-                      <img
-                        [src]="item.product.image_url"
-                        [alt]="item.product.name"
-                        class="rounded me-3"
-                        style="width:70px;height:70px;object-fit:cover"
-                      >
-                    } @else {
-                      <div
-                        class="rounded me-3 bg-light d-flex align-items-center justify-content-center"
-                        style="width:70px;height:70px"
-                      >
-                        <i class="bi bi-box-seam text-secondary fs-4"></i>
+                      <!-- Imagen -->
+                      @if (item.product.image_url) {
+                        <img
+                          [src]="item.product.image_url"
+                          [alt]="item.product.name"
+                          class="rounded"
+                          style="width:56px;height:56px;object-fit:cover;flex-shrink:0"
+                        >
+                      } @else {
+                        <div
+                          class="rounded bg-light d-flex align-items-center justify-content-center"
+                          style="width:56px;height:56px;flex-shrink:0"
+                        >
+                          <i class="bi bi-box-seam text-secondary"></i>
+                        </div>
+                      }
+
+                      <!-- Nombre y precio -->
+                      <div class="flex-grow-1 min-width-0">
+                        <div class="fw-bold text-truncate">{{ item.product.name }}</div>
+                        <small class="text-muted">
+                          S/ {{ item.product.price | number:'1.2-2' }} c/u
+                        </small>
                       </div>
-                    }
 
-                    <!-- Info -->
-                    <div class="flex-grow-1">
-                      <h6 class="fw-bold mb-0">{{ item.product.name }}</h6>
-                      <small class="text-muted">S/ {{ item.product.price | number:'1.2-2' }} c/u</small>
-                    </div>
-
-                    <!-- Cantidad -->
-                    <div class="d-flex align-items-center gap-2 mx-3">
+                      <!-- Eliminar -->
                       <button
-                        class="btn btn-outline-secondary btn-sm"
-                        (click)="cart.updateQuantity(item.product.id, item.quantity - 1)"
+                        class="btn btn-outline-danger btn-sm"
+                        (click)="cart.removeFromCart(item.product.id)"
                       >
-                        <i class="bi bi-dash"></i>
-                      </button>
-                      <span class="fw-bold px-2" style="min-width:2rem;text-align:center">
-                        {{ item.quantity }}
-                      </span>
-                      <button
-                        class="btn btn-outline-secondary btn-sm"
-                        [disabled]="item.quantity >= item.product.stock"
-                        (click)="cart.updateQuantity(item.product.id, item.quantity + 1)"
-                      >
-                        <i class="bi bi-plus"></i>
+                        <i class="bi bi-trash"></i>
                       </button>
                     </div>
 
-                    <!-- Subtotal -->
-                    <div class="text-end me-3" style="min-width:80px">
-                      <span class="fw-bold text-primary">
+                    <!-- Cantidad y subtotal -->
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex align-items-center gap-2">
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          (click)="cart.updateQuantity(item.product.id, item.quantity - 1)"
+                        >
+                          <i class="bi bi-dash"></i>
+                        </button>
+                        <span class="fw-bold px-2">{{ item.quantity }}</span>
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          [disabled]="item.quantity >= item.product.stock"
+                          (click)="cart.updateQuantity(item.product.id, item.quantity + 1)"
+                        >
+                          <i class="bi bi-plus"></i>
+                        </button>
+                      </div>
+                      <span class="fw-bold text-primary fs-6">
                         S/ {{ (item.product.price * item.quantity) | number:'1.2-2' }}
                       </span>
                     </div>
-
-                    <!-- Eliminar -->
-                    <button
-                      class="btn btn-outline-danger btn-sm"
-                      (click)="cart.removeFromCart(item.product.id)"
-                    >
-                      <i class="bi bi-trash"></i>
-                    </button>
                   </div>
                 }
               </div>
@@ -133,9 +133,10 @@ import { NavbarComponent } from '../../../shared/components/navbar/navbar.compon
                   </span>
                 </div>
 
-                <!-- Nota opcional -->
                 <div class="mb-3">
-                  <label class="form-label small fw-semibold">Nota para el pedido (opcional)</label>
+                  <label class="form-label small fw-semibold">
+                    Nota para el pedido (opcional)
+                  </label>
                   <textarea
                     class="form-control form-control-sm"
                     rows="2"
