@@ -25,8 +25,42 @@ import { Product } from '../../../core/models/product.model';
     <div class="container pb-5">
 
       <!-- Filtros -->
-      <div class="filter-bar rounded-3 p-3 mb-4 d-flex flex-wrap gap-3 align-items-center">
-        <div class="flex-grow-1" style="min-width:200px">
+      <div class="filter-bar rounded-3 p-3 mb-4">
+  <div class="row g-2 align-items-center">
+    <div class="col-12">
+      <div class="input-group">
+        <span class="input-group-text">🔍</span>
+        <input type="text" class="form-control" placeholder="Buscar postre..."
+          [(ngModel)]="searchTerm">
+      </div>
+    </div>
+    <div class="col-6">
+      <select class="form-select" [(ngModel)]="selectedCategory">
+        <option value="">Todas las categorías</option>
+        @for (cat of categories(); track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-6">
+      <select class="form-select" [(ngModel)]="sortBy">
+        <option value="name">A - Z</option>
+        <option value="price_asc">Menor precio</option>
+        <option value="price_desc">Mayor precio</option>
+      </select>
+    </div>
+    <div class="col-12">
+      <a routerLink="/cart" class="btn btn-pastel-primary w-100 position-relative">
+        <i class="bi bi-bag-heart me-2"></i>Ver carrito
+        @if (cart.totalItems() > 0) {
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ cart.totalItems() }}
+          </span>
+        }
+      </a>
+    </div>
+  </div>
+</div>
           <div class="input-group">
             <span class="input-group-text">🔍</span>
             <input type="text" class="form-control" placeholder="Buscar postre..."
