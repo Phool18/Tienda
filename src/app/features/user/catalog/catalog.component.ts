@@ -192,14 +192,27 @@ export class CatalogComponent implements OnInit {
   products         = signal<Product[]>([]);
   categories       = signal<string[]>([]);
   loading          = signal(true);
-  searchTerm       = '';
-  selectedCategory = '';
-  sortBy           = 'name';
+  searchTerm       = signal('');
+  selectedCategory = signal('');
+  sortBy           = signal('name');
 
   filtered = computed(() => {
-    let list = this.products();
-    if (this.searchTerm) {
-      const t = this.searchTerm.toLowerCase();
+  let list = this.products();
+  if (this.searchTerm()) {
+    const t = this.searchTerm().toLowerCase();
+    list = list.filter(p =>
+      p.name.toLowerCase().includes(t) || p.description?.toLowerCase().includes(t)
+    );
+  }
+  if (this.selectedCategory()) {
+    list = list.filter(p => p.category === this.selectedCategory());
+  }
+  return [...list].sort((a, b) => {
+    if (this.sortBy() === 'price_asc')  return a.price - b.price;
+    if (this.sortBy() === 'price_desc') return b.price - a.price;
+    return a.name.localeCompare(b.name);
+  });
+});
       list = list.filter(p =>
         p.name.toLowerCase().includes(t) || p.description?.toLowerCase().includes(t)
       );
