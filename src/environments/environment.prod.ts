@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  supabaseUrl: 'https://garmlajdvcdoprmpipeq.supabase.co',
-   supabaseAnonKey: 'sb_publishable_E7okF7nihsYUQzevi2nkOw_iXME4fB2',
+  supabaseUrl: 'https://nmzkstsiawknlsishzrw.supabase.co',
+   supabaseAnonKey: 'b_publishable_Wx7Pr6XqN6mOA-H40JItRA_DLcIK6tH',
    whatsappNumber: '51906362305',
-   storeName: 'Tienda'
+   storeName: 'Gustitos y mas'
 };
