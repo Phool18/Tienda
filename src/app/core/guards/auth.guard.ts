@@ -3,17 +3,34 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const authGuard: CanActivateFn = (_route, state) => {
+// Espera a que el perfil esté cargado
+async function waitForProfile(auth: AuthService): Promise<void> {
+  if (auth.isLoggedIn()) return;
+  // Esperar máximo 3 segundos
+  for (let i = 0; i < 30; i++) {
+    await new Promise(r => setTimeout(r, 100));
+    if (auth.profile() !== null || !auth.loading()) return;
+  }
+}
+
+export const authGuard: CanActivateFn = async (_route, state) => {
   const auth   = inject(AuthService);
   const router = inject(Router);
+
+  await waitForProfile(auth);
+
   if (auth.isLoggedIn()) return true;
+
   router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
   return false;
 };
 
-export const adminGuard: CanActivateFn = (_route, _state) => {
+export const adminGuard: CanActivateFn = async (_route, _state) => {
   const auth   = inject(AuthService);
   const router = inject(Router);
+
+  await waitForProfile(auth);
+
   if (auth.isAdmin()) return true;
   if (auth.isLoggedIn()) {
     router.navigate(['/catalog']);
@@ -23,18 +40,25 @@ export const adminGuard: CanActivateFn = (_route, _state) => {
   return false;
 };
 
-export const userGuard: CanActivateFn = (_route, _state) => {
+export const userGuard: CanActivateFn = async (_route, _state) => {
   const auth   = inject(AuthService);
   const router = inject(Router);
+
+  await waitForProfile(auth);
+
   if (auth.isUser() || auth.isAdmin()) return true;
   router.navigate(['/login']);
   return false;
 };
 
-export const noAuthGuard: CanActivateFn = (_route, _state) => {
+export const noAuthGuard: CanActivateFn = async (_route, _state) => {
   const auth   = inject(AuthService);
   const router = inject(Router);
+
+  await waitForProfile(auth);
+
   if (!auth.isLoggedIn()) return true;
+
   if (auth.isAdmin()) {
     router.navigate(['/admin/products']);
   } else {
@@ -44,9 +68,12 @@ export const noAuthGuard: CanActivateFn = (_route, _state) => {
 };
 
 // ── Bloquear admin de rutas de usuario ────────────────────
-export const blockAdminGuard: CanActivateFn = (_route, _state) => {
+export const blockAdminGuard: CanActivateFn = async (_route, _state) => {
   const auth   = inject(AuthService);
   const router = inject(Router);
+
+  await waitForProfile(auth);
+
   if (auth.isAdmin()) {
     router.navigate(['/admin/products']);
     return false;
