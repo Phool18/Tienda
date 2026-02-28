@@ -58,105 +58,75 @@ import { Order, OrderStatus } from '../../../core/models/order.model';
       </div>
 
       <!-- Loading -->
-      @if (loading()) {
-        <div class="text-center py-5">
-          <div class="spinner-border text-primary"></div>
-        </div>
-      }
-
-      <!-- Tabla de pedidos -->
       @if (!loading()) {
-        <div class="card border-0 shadow-sm">
-          <div class="card-body p-0">
-            <div class="table-responsive">
-              <table class="table admin-table mb-0">
-                <thead>
-                  <tr>
-                    <th class="ps-4">ID Pedido</th>
-                    <th>Cliente</th>
-                    <th>Productos</th>
-                    <th>Total</th>
-                    <th>Fecha</th>
-                    <th>Estado</th>
-                    <th class="text-center">Cambiar estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (order of filtered(); track order.id) {
-                    <tr>
-                      <td class="ps-4">
-                        <span class="font-monospace fw-bold text-muted">
-                          #{{ order.id.substring(0,8).toUpperCase() }}
-                        </span>
-                      </td>
-                      <td>
-                        <div class="fw-semibold">{{ order.profiles?.full_name ?? 'N/A' }}</div>
-                        @if (order.profiles?.phone) {
-                          <small class="text-muted">
-                            <i class="bi bi-whatsapp text-success me-1"></i>
-                            {{ order.profiles?.phone }}
-                          </small>
-                        }
-                      </td>
-                      <td>
-                        @if (order.order_items && order.order_items.length > 0) {
-                          <div>
-                            @for (item of order.order_items; track item.id; let last = $last) {
-                              <span class="small">
-                                {{ item.products?.name }} x{{ item.quantity }}{{ last ? '' : ', ' }}
-                              </span>
-                            }
-                          </div>
-                        }
-                      </td>
-                      <td class="fw-bold text-primary">
-                        S/ {{ order.total | number:'1.2-2' }}
-                      </td>
-                      <td>
-                        <small class="text-muted">
-                          {{ order.created_at | date:'dd/MM/yy HH:mm' }}
-                        </small>
-                      </td>
-                      <td>
-                        <span class="status-badge {{ order.status }}">
-                          {{ order.status }}
-                        </span>
-                      </td>
-                      <td class="text-center">
-                        <select
-                          class="form-select form-select-sm"
-                          style="max-width:150px;margin:auto"
-                          [value]="order.status"
-                          (change)="changeStatus(order, $any($event.target).value)"
-                          [disabled]="updatingId() === order.id"
-                        >
-                          <option value="pendiente">Pendiente</option>
-                          <option value="confirmado">Confirmado</option>
-                          <option value="entregado">Entregado</option>
-                          <option value="cancelado">Cancelado</option>
-                        </select>
-                        @if (updatingId() === order.id) {
-                          <span class="spinner-border spinner-border-sm text-primary mt-1"></span>
-                        }
-                      </td>
-                    </tr>
-                  } @empty {
-                    <tr>
-                      <td colspan="7" class="text-center py-5 text-muted">
-                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                        No hay pedidos con ese criterio
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
+  <div class="d-flex flex-column gap-3">
+    @for (order of filtered(); track order.id) {
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body">
+          <!-- Header del pedido -->
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <span class="font-monospace fw-bold text-muted">
+                #{{ order.id.substring(0,8).toUpperCase() }}
+              </span>
+              <br>
+              <small class="text-muted">
+                {{ order.created_at | date:'dd/MM/yy HH:mm' }}
+              </small>
             </div>
+            <span class="status-badge {{ order.status }}">{{ order.status }}</span>
           </div>
-          <div class="card-footer text-muted small bg-transparent">
-            Mostrando {{ filtered().length }} de {{ orders().length }} pedidos
+
+          <!-- Cliente -->
+          <div class="mb-2 p-2 rounded-3" style="background:#fce7f3">
+            <div class="fw-semibold">{{ order.profiles?.full_name ?? 'N/A' }}</div>
+            @if (order.profiles?.phone) {
+              <small class="text-muted">
+                <i class="bi bi-whatsapp text-success me-1"></i>{{ order.profiles?.phone }}
+              </small>
+            }
+          </div>
+
+          <!-- Productos -->
+          @if (order.order_items && order.order_items.length > 0) {
+            <div class="mb-2">
+              @for (item of order.order_items; track item.id) {
+                <div class="d-flex justify-content-between small py-1 border-bottom">
+                  <span>{{ item.products?.name }} x{{ item.quantity }}</span>
+                  <span class="fw-semibold">S/ {{ (item.unit_price * item.quantity) | number:'1.2-2' }}</span>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Total + cambiar estado -->
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <span class="fw-bold text-primary">Total: S/ {{ order.total | number:'1.2-2' }}</span>
+            <select
+              class="form-select form-select-sm w-auto"
+              [value]="order.status"
+              (change)="changeStatus(order, $any($event.target).value)"
+              [disabled]="updatingId() === order.id"
+            >
+              <option value="pendiente">Pendiente</option>
+              <option value="confirmado">Confirmado</option>
+              <option value="entregado">Entregado</option>
+              <option value="cancelado">Cancelado</option>
+            </select>
           </div>
         </div>
-      }
+      </div>
+    } @empty {
+      <div class="empty-state">
+        <span class="empty-emoji">📋</span>
+        <h4>No hay pedidos</h4>
+      </div>
+    }
+  </div>
+  <div class="text-muted small mt-2">
+    Mostrando {{ filtered().length }} de {{ orders().length }} pedidos
+  </div>
+}
     </div>
   `
 })
