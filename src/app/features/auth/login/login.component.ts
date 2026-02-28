@@ -126,7 +126,7 @@ export class LoginComponent {
       const returnUrl = this.route.snapshot.queryParams['returnUrl'];
 
       if (role === 'ADMIN') {
-        this.router.navigate([returnUrl ?? '/admin/products'], { replaceUrl: true });
+        this.router.navigate(['/admin/products'], { replaceUrl: true });
       } else {
         this.router.navigate([returnUrl ?? '/catalog'], { replaceUrl: true });
       }
