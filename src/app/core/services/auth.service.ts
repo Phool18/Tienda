@@ -146,10 +146,10 @@ export class AuthService {
   }
 
   // ── Logout ─────────────────────────────────────────────
-  async logout() {
-    await this.supabase.auth.signOut();
+   async logout() {
     this._profile.set(null);
-    this._prevRoute = '';
+    this._loading.set(false);
     this.router.navigate(['/login']);
+    this.supabase.auth.signOut(); // sin await — corre en segundo plano
   }
 }
