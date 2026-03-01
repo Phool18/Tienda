@@ -1,7 +1,6 @@
 // src/app/core/services/auth.service.ts
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { SupabaseService } from './supabase.service';
 import { Profile } from '../models/user.model';
 
@@ -10,8 +9,7 @@ export class AuthService {
   private supabase = inject(SupabaseService);
   private router   = inject(Router);
 
-  private _profile   = signal<Profile | null>(null);
-  private _prevRoute = '';
+  private _profile = signal<Profile | null>(null);
 
   readonly profile    = this._profile.asReadonly();
   readonly isLoggedIn = computed(() => !!this._profile());
@@ -24,33 +22,6 @@ export class AuthService {
         this.loadProfile(data.session.user.id);
       }
     });
-
-    // ── Detectar navegación hacia atrás entre roles ────────
-    // Guardamos la ruta anterior para detectar si alguien
-    // retrocede desde /admin a rutas de usuario o viceversa
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe((e: any) => {
-        const current = e.urlAfterRedirects as string;
-
-        // Si venía de admin y ahora va a ruta de usuario → cerrar sesión
-        if (this._prevRoute.startsWith('/admin') && !current.startsWith('/admin') && !current.startsWith('/login')) {
-          this.logout();
-          return;
-        }
-
-        // Si venía de ruta de usuario y ahora va a admin → cerrar sesión
-        if (!this._prevRoute.startsWith('/admin') &&
-            !this._prevRoute.startsWith('/login') &&
-            !this._prevRoute.startsWith('/register') &&
-            this._prevRoute !== '' &&
-            current.startsWith('/admin')) {
-          this.logout();
-          return;
-        }
-
-        this._prevRoute = current;
-      });
   }
 
   private async loadProfile(userId: string): Promise<Profile | null> {
@@ -68,19 +39,6 @@ export class AuthService {
     return data as Profile;
   }
 
-  // ── Verificar correo duplicado ─────────────────────────
-  async checkEmailExists(email: string): Promise<boolean> {
-    const { data } = await this.supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', email)
-      .maybeSingle();
-    // Supabase Auth maneja esto — si signUp falla con "already registered" lo atrapamos en register()
-    // Esta consulta es adicional para dar feedback inmediato
-    return !!data;
-  }
-
-  // ── Verificar teléfono duplicado ───────────────────────
   async checkPhoneExists(phone: string): Promise<boolean> {
     const { data } = await this.supabase
       .from('profiles')
@@ -90,9 +48,7 @@ export class AuthService {
     return !!data;
   }
 
-  // ── Registro ───────────────────────────────────────────
   async register(email: string, password: string, fullName: string, phone: string) {
-    // Verificar teléfono duplicado antes de registrar
     const phoneExists = await this.checkPhoneExists(phone);
     if (phoneExists) {
       throw new Error('PHONE_EXISTS');
@@ -114,7 +70,6 @@ export class AuthService {
     return data;
   }
 
-  // ── Login ──────────────────────────────────────────────
   async login(email: string, password: string): Promise<'ADMIN' | 'USER'> {
     const { data: authData, error: authError } = await this.supabase.auth
       .signInWithPassword({ email, password });
@@ -145,11 +100,9 @@ export class AuthService {
     return profile.role;
   }
 
-  // ── Logout ─────────────────────────────────────────────
-   async logout() {
+  logout() {
     this._profile.set(null);
-    this._loading.set(false);
     this.router.navigate(['/login']);
-    this.supabase.auth.signOut(); // sin await — corre en segundo plano
+    this.supabase.auth.signOut();
   }
 }
